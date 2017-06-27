@@ -1,0 +1,127 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+
+<project name="jenkins_main_project" default="report" basedir=".">
+
+	<property file="build.properties"/>
+	<property name="src.dir" value="src"/>
+	<property name="test.dir" value="test"/>
+	<property name="build.dir" value="build"/>
+	<property name="build.java.dir" value="${build.dir}/classes"/>
+	<property name="build.test.dir" value="${build.dir}/test/classes"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="dist.dir" value="dist"/>
+	
+	<property name="target.report.dir" location="report"/>
+	
+		<path id="compile.classpath">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+	
+		<path id="test.compile.classpath">
+			<path refid="compile.classpath" />
+			<pathelement location="${build.java.dir}" />
+			<pathelement location="${build.test.dir}" />
+		</path>
+	
+		<target name="clean">
+			<delete dir="${build.dir}"/>
+			<delete dir="${dist.dir}"/>
+		</target>
+		<target name="init" depends="clean">
+			<mkdir dir="${build.dir}"/>
+			<mkdir dir="${build.java.dir}"/>
+			<mkdir dir="${build.test.dir}"/>
+			<mkdir dir="${dist.dir}"/>
+		</target>
+		<target name="compile" depends="init,if_unix,if_windows">
+		</target>
+		<target name="checkos">
+			<condition property="isWindows" value="true">
+				<os family="windows"/> 
+			</condition>
+			<condition property="isLinux" value="true">
+				<os family="unix"/>
+			</condition>
+		</target> 
+		<target name="if_windows" depends="checkos" if="isWindows">
+			<javac target="1.7" source="1.7" destdir="${build.java.dir}" debug="true" srcdir="${src.dir}">
+				<classpath refid="compile.classpath" />
+			</javac>
+			<javac target="1.7" source="1.7" destdir="${build.test.dir}" debug="true" srcdir="${test.dir}">
+				<classpath>
+				     <pathelement location="${build.java.dir}"/>
+				     <path refid = "compile.classpath" />
+				 </classpath>
+			</javac>
+		</target>
+		<target name="if_unix" depends="checkos" if="isLinux">
+			<javac target="1.7" source="1.7" destdir="${build.dir}" debug="true" srcdir="${src.dir}" fork="yes" executable="/opt/java7/bin/javac" compiler="javac1.7">
+				<classpath refid="compile.classpath" />
+			</javac>
+		</target>
+		<target name="copy" depends="compile">
+			<copy todir="${build.dir}">
+				<fileset dir="${basedir}">
+					<include name="*.properties" />
+				</fileset>			
+			</copy>
+		</target>
+		<target name="war" depends="copy">
+			<war destfile="${dist.dir}/jenkins_main_project.war" webxml="WebContent/WEB-INF/web.xml">
+				<fileset dir="WebContent">
+					<include name="WEB-INF/rest-servlet.xml" />
+				</fileset>
+				<fileset dir="WebContent" />
+				<lib dir="${lib.dir}" />
+				<classes dir="${build.dir}" />
+			</war>
+		</target>
+		
+	<target name="test1" depends="copy">
+		<delete dir="${target.report.dir}" /> 
+		<mkdir dir="${target.report.dir}"/>
+	 
+	        <junit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+	            <formatter type="plain" usefile="false"/>
+	            <formatter type="xml"/>
+	            <batchtest todir="${target.report.dir}">
+	                <fileset dir="${test.dir}">
+	                    <include name="**/*Test.java"/>
+	                    <exclude name="**/Test*All.java"/>
+	                </fileset>
+	            </batchtest>
+	        	<classpath refid="test.compile.classpath" />
+	        </junit>
+	    </target>
+	
+	<target name="test" depends="copy" description="unit test">
+				 <delete dir="${target.report.dir}" /> <mkdir dir="${target.report.dir}" />
+			<junit maxmemory="1536m" fork="true" printsummary="yes"
+				haltonfailure="no">
+				<batchtest todir="${target.report.dir}">
+					<fileset dir="${build.test.dir}">
+						<!--<include name="com/discernnetwork/pqs/controller/*TestController.*" 
+							/> -->
+						<include name="com/discernnetwork/jenkins/**/*Test*.*" />
+					</fileset>
+				</batchtest>
+				<formatter type="xml" />
+				<classpath refid="test.compile.classpath" />
+			</junit>
+		</target>
+	 
+	    <target name="report" depends="test">
+	        <mkdir dir="${target.report.dir}/html"/>
+	        <junitreport todir="${target.report.dir}">
+	            <fileset dir="${target.report.dir}">
+	                <include name="TEST-*.xml"/>
+	            </fileset>
+	            <report todir="${target.report.dir}/html"/>
+	        </junitreport>
+	    </target>
+	
+	
+</project>
+	
