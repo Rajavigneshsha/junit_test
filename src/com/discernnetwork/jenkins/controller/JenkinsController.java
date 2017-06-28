@@ -23,6 +23,6 @@ public class JenkinsController {
 
     @RequestMapping(value = "/print_message", method = { RequestMethod.GET, RequestMethod.POST }, headers = "Accept=application/json")
     public Object printGivenMessage(HttpServletRequest request) {
-        return "the message is " + request.getParameter("message");
+        return "the message is changed now" + request.getParameter("message");
     }
 }
