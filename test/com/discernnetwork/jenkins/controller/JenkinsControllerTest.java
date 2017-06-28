@@ -1,5 +1,6 @@
 package com.discernnetwork.jenkins.controller;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,18 @@ public class JenkinsControllerTest {
     private JenkinsController jenkinsController;
 
     @Test
-    public void testPrintMessage() {
+    public void testPrintMessageNotNull() {
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.addParameter("message", "hello");
         Object message = this.jenkinsController.printGivenMessage(mockHttpServletRequest);
-        System.out.println("message is " + message);
+        Assert.assertNotNull(message);
+    }
+
+    @Test
+    public void testPrintMessageNull() {
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+        mockHttpServletRequest.addParameter("message", "hello");
+        Object message = this.jenkinsController.printGivenMessage(mockHttpServletRequest);
+        Assert.assertNull(message);
     }
 }
