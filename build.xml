@@ -1,6 +1,6 @@
 <?xml  version="1.0" encoding="UTF-8"?>
 
-<project name="jenkins_main_project" default="report" basedir=".">
+<project name="jenkins_main_project" default="war" basedir=".">
 
 	<property file="build.properties"/>
 	<property name="src.dir" value="src"/>
@@ -75,7 +75,7 @@
 				</fileset>
 				<fileset dir="WebContent" />
 				<lib dir="${lib.dir}" />
-				<classes dir="${build.dir}" />
+				<classes dir="${build.java.dir}" />
 			</war>
 		</target>
 		
