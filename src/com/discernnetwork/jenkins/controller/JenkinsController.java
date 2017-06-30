@@ -28,9 +28,9 @@ public class JenkinsController {
         String message = request.getParameter("message");
 
         if (StringUtil.isValidString(message)) {
-            message = "message valid";
+            message = "message is valid one";
         } else {
-            message = "message not valid";
+            message = "message is not valid one";
         }
         return message;
     }
