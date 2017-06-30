@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.discernnetwork.signals.util.StringUtil;
+import com.discernnetwork.jenkins_stringutil.util.StringUtil;
 
 @RestController
 public class JenkinsController {
