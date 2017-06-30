@@ -14,10 +14,11 @@ package com.discernnetwork.jenkins.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.discernnetwork.jenkins.util.StringUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.discernnetwork.signals.util.StringUtil;
 
 @RestController
 public class JenkinsController {
