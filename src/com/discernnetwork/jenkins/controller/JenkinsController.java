@@ -14,6 +14,7 @@ package com.discernnetwork.jenkins.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.discernnetwork.jenkins.util.StringUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,13 @@ public class JenkinsController {
 
     @RequestMapping(value = "/print_message", method = { RequestMethod.GET, RequestMethod.POST }, headers = "Accept=application/json")
     public Object printGivenMessage(HttpServletRequest request) {
-        return "the message is changed now" + request.getParameter("message");
+        String message = request.getParameter("message");
+
+        if (StringUtil.isValidString(message)) {
+            message = "message valid";
+        } else {
+            message = "message not valid";
+        }
+        return message;
     }
 }
