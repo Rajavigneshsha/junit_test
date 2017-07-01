@@ -42,7 +42,7 @@ public class JenkinsController {
         return message;
     }
 
-    public void findBugsCheck(Map<String, String> map) {
+    public void findBugsCheck(java.util.Map<String, String> map) {
         String data = map.get("data");
         data = data.toUpperCase();
         String startsWith = "info";
