@@ -1,6 +1,6 @@
 <?xml  version="1.0" encoding="UTF-8"?>
 
-<project name="jenkins_main_project" default="report.checkstyle" basedir=".">
+<project name="jenkins_main_project" default="findbugs" basedir=".">
 
 	<property file="build.properties"/>
 	<property name="src.dir" value="src"/>
@@ -124,6 +124,8 @@
 	        </junitreport>
 	    </target>
 	
+	
+	<!-- check style warning xml creation -->
 	<property name="checkstyle.home.dir" location="checkstyle-5.0" />
 	<property name="target.checkstyle.report.dir" location="check_report"/>
 	<target name="report.checkstyle" 
@@ -148,11 +150,43 @@
 	            <fileset dir="${src.dir}" includes="**/*.java" />
 	        </checkstyle>
 
-	        <style in="${target.checkstyle.report.dir}/checkstyle_report.xml"
+	   <!--     <style in="${target.checkstyle.report.dir}/checkstyle_report.xml"
 	               out="${target.checkstyle.report.dir}/checkstyle_report.html"
 	               style="${checkstyle.home.dir}/contrib/checkstyle-noframes.xsl"
-	        />
+	        />   -->
 	    </target>
 	
+	<property name="findbugs.home.dir" value="findbugs-3.0.1" />
+	<property name="target.findbugs.report.dir" location="findbugs_report" />
+	
+	
+	<target name="findbugs"
+	            depends="report.checkstyle"
+	            description="Run code analysis over code to check for problems."
+	    >
+		<delete dir="${target.findbugs.report.dir}" />
+	        <!-- Fail this target if FindBugs is not installed. -->
+	        <available file="${findbugs.home.dir}/lib/findbugs.jar" property="findbugs.available" />
+	        <fail unless="findbugs.available"
+	              message="Error: FINDBUGS_HOME not set or findbugs.jar not found."
+	        />
+	        <taskdef name="findbugs"
+	                 classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
+	                 classpath="${findbugs.home.dir}/lib/findbugs-ant.jar"
+	        />
+
+	        <!-- Run FindBugs. -->
+	        <mkdir dir="${target.findbugs.report.dir}" />
+	        <findbugs home="${findbugs.home.dir}"
+	                  workHard="true"
+	                  output="xml:withMessages"
+	                  outputFile="${target.findbugs.report.dir}/findbugs.xml"
+	        >
+	            <class location="${build.java.dir}" />
+	            <auxClasspath>
+	                <fileset file="${lib.dir}/*.jar" />
+	            </auxClasspath>
+	        </findbugs>
+	    </target>
 </project>
 	
