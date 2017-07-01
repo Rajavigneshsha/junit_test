@@ -32,6 +32,14 @@ public class JenkinsController {
         } else {
             message = "message is not valid one";
         }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("some info1");
+
+        if (sb != null) {
+            sb.append("some info2");
+        }
+
         return message;
     }
 }
