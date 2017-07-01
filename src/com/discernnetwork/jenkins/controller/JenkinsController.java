@@ -45,5 +45,9 @@ public class JenkinsController {
     public void findBugsCheck(Map<String, String> map) {
         String data = map.get("data");
         data = data.toUpperCase();
+        String startsWith = "info";
+        if (startsWith.startsWith("i")) {
+            System.out.println("It starts with i");
+        }
     }
 }
