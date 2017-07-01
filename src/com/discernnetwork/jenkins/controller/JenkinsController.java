@@ -12,6 +12,9 @@
  */
 package com.discernnetwork.jenkins.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,13 +36,14 @@ public class JenkinsController {
             message = "message is not valid one";
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("some info1");
-
-        if (sb != null) {
-            sb.append("some info2");
-        }
-
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("data", "info");
+        findBugsCheck(map);
         return message;
+    }
+
+    public void findBugsCheck(Map<String, String> map) {
+        String data = map.get("data");
+        data = data.toUpperCase();
     }
 }
