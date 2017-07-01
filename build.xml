@@ -1,6 +1,6 @@
 <?xml  version="1.0" encoding="UTF-8"?>
 
-<project name="jenkins_main_project" default="findbugs" basedir=".">
+<project name="jenkins_main_project" default="report.pmd" basedir=".">
 
 	<property file="build.properties"/>
 	<property name="src.dir" value="src"/>
@@ -156,10 +156,9 @@
 	        />   -->
 	    </target>
 	
+	<!-- find bugs xml creation -->
 	<property name="findbugs.home.dir" value="findbugs-3.0.1" />
 	<property name="target.findbugs.report.dir" location="findbugs_report" />
-	
-	
 	<target name="findbugs"
 	            depends="report.checkstyle"
 	            description="Run code analysis over code to check for problems."
@@ -188,5 +187,32 @@
 	            </auxClasspath>
 	        </findbugs>
 	    </target>
+	
+	<property name="pmd.home.dir" value="pmd-4.2.5" />
+	<property name="target.pmd.report.dir" location="pmd_report" />
+	
+	<path id="pmd2.classpath">
+	        <pathelement location="${build}" />
+	        <fileset dir="${pmd.home.dir}/lib/">
+	            <include name="*.jar" />
+	        </fileset>
+	</path>
+	<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" 
+	        classpathref="pmd2.classpath" />
+	<target name="report.pmd" depends="findbugs">
+		<delete dir="${target.pmd.report.dir}" />
+	        <mkdir dir="${target.pmd.report.dir}" />
+	        <pmd rulesetfiles="rulesets/favorites.xml">
+	            <formatter type="xml" toFile="${target.pmd.report.dir}/pmd_report.xml" />
+	            <fileset dir="${src.dir}">
+	                <include name="**/*.java" />
+	            </fileset>
+	        </pmd>
+	        <xslt in="${target.pmd.report.dir}/pmd_report.xml"
+	              style="${pmd.home.dir}/etc/xslt/pmd-report-per-class.xslt"
+	              out="${target.pmd.report.dir}/pmd_report.html"
+	        />
+	    </target>
+	
 </project>
 	
