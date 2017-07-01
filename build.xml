@@ -208,10 +208,10 @@
 	                <include name="**/*.java" />
 	            </fileset>
 	        </pmd>
-	        <xslt in="${target.pmd.report.dir}/pmd_report.xml"
+	      <!--  <xslt in="${target.pmd.report.dir}/pmd_report.xml"
 	              style="${pmd.home.dir}/etc/xslt/pmd-report-per-class.xslt"
 	              out="${target.pmd.report.dir}/pmd_report.html"
-	        />
+	        />  -->
 	    </target>
 	
 </project>

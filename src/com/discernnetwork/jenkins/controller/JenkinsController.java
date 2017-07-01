@@ -39,6 +39,9 @@ public class JenkinsController {
         Map<String, String> map = new HashMap<String, String>();
         map.put("data", "info");
         findBugsCheck(map);
+        int range = Integer.valueOf("5").intValue();
+        String rangeStr = "" + range;
+        System.out.println(range);
         return message;
     }
 
