@@ -1,6 +1,6 @@
 <?xml  version="1.0" encoding="UTF-8"?>
 
-<project name="jenkins_main_project" default="war" basedir=".">
+<project name="jenkins_main_project" default="report.checkstyle" basedir=".">
 
 	<property file="build.properties"/>
 	<property name="src.dir" value="src"/>
@@ -11,7 +11,9 @@
 	<property name="lib.dir" value="../libs"/>
 	<property name="dist.dir" value="dist"/>
 	
-	<property name="target.report.dir" location="report"/>
+	<property name="target.report.dir" location="junit_report"/>
+	
+	
 	
 		<path id="compile.classpath">
 			<fileset dir="${lib.dir}">
@@ -122,6 +124,35 @@
 	        </junitreport>
 	    </target>
 	
+	<property name="checkstyle.home.dir" location="checkstyle-5.0" />
+	<property name="target.checkstyle.report.dir" location="check_report"/>
+	<target name="report.checkstyle" 
+	        description="Generate a report of code convention violations." depends="copy">
+		    <delete dir="${target.checkstyle.report.dir}" />
+	        <taskdef resource="checkstyletask.properties"
+	                 classpath="${checkstyle.home.dir}/checkstyle-all-5.0.jar" />
+
+	        <!-- run verification of installation-->
+	        <available file="${checkstyle.home.dir}/checkstyle-all-5.0.jar"
+	                   property="checkstyle.available" />
+	        <fail unless="checkstyle.available"
+	              message="Error: CHECKSTYLE_HOME not set or checkstyle-all-5.0.jar not found." />
+	        <mkdir dir="${target.checkstyle.report.dir}" />
+
+	        <!-- run analysis-->
+	        <checkstyle config="${checkstyle.home.dir}/sun_checks.xml"
+	                    failureProperty="checkstyle.failure"
+	                    failOnViolation="false"
+	        >
+	            <formatter type="xml" tofile="${target.checkstyle.report.dir}/checkstyle_report.xml" />
+	            <fileset dir="${src.dir}" includes="**/*.java" />
+	        </checkstyle>
+
+	        <style in="${target.checkstyle.report.dir}/checkstyle_report.xml"
+	               out="${target.checkstyle.report.dir}/checkstyle_report.html"
+	               style="${checkstyle.home.dir}/contrib/checkstyle-noframes.xsl"
+	        />
+	    </target>
 	
 </project>
 	
