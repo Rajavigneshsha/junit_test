@@ -127,7 +127,7 @@
 	<property name="checkstyle.home.dir" location="checkstyle-5.0" />
 	<property name="target.checkstyle.report.dir" location="check_report"/>
 	<target name="report.checkstyle" 
-	        description="Generate a report of code convention violations." depends="copy">
+	        description="Generate a report of code convention violations." depends="test">
 		    <delete dir="${target.checkstyle.report.dir}" />
 	        <taskdef resource="checkstyletask.properties"
 	                 classpath="${checkstyle.home.dir}/checkstyle-all-5.0.jar" />
